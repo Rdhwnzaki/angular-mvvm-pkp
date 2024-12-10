@@ -1,15 +1,94 @@
-<ul class="product-list">
-  <li *ngFor="let product of products" class="product-item">
-    <div class="product-thumbnail">
-      <img [src]="product.thumbnail" alt="Product Image" />
+<div class="max-w-full mx-auto p-4">
+  <span class="font-medium text-4xl text-indigo-600">Product List</span>
+
+  <div
+    class="mt-3 mb-6 flex items-center space-x-4 justify-center sm:justify-start"
+  >
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Search Product"
+      class="w-full max-w-xs p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-400"
+    />
+    <button
+      (click)="searchProducts()"
+      class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+    >
+      Cari
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="text-center text-indigo-500 my-8">
+    <div
+      class="spinner-border animate-spin h-10 w-10 border-4 border-t-4 border-gray-200 rounded-full mx-auto"
+    ></div>
+    <p class="mt-4 text-xl">Loading...</p>
+  </div>
+
+  <div
+    *ngIf="errorMessage"
+    class="text-center text-red-500 p-4 border border-red-300 rounded-lg mt-6 shadow-lg"
+  >
+    <p class="font-semibold">{{ errorMessage }}</p>
+  </div>
+
+  <div
+    *ngIf="products.length > 0"
+    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 mt-6"
+  >
+    <div
+      *ngFor="let product of products"
+      [routerLink]="['/product-detail', product.id]"
+      class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-200 ease-in-out transform hover:scale-105"
+      (click)="goToProductDetail(product.id)"
+    >
+      <img
+        [src]="product.thumbnail"
+        alt="{{ product.title }}"
+        class="w-full h-56 object-cover rounded-lg mb-4 transition-transform duration-500 ease-in-out transform hover:scale-110"
+      />
+
+      <h2 class="text-xl font-semibold text-gray-800 truncate mb-2">
+        {{ product.title }}
+      </h2>
+
+      <p class="text-gray-600 mt-2 text-sm truncate">
+        {{ product.description }}
+      </p>
+
+      <p class="mt-2 text-gray-500 text-sm">
+        Brand :
+        <span class="text-gray-700 font-medium">{{ product.brand }}</span>
+      </p>
+
+      <p class="mt-2 text-gray-500 text-sm">
+        Category :
+        <span class="text-gray-700 font-medium">{{ product.category }}</span>
+      </p>
+
+      <p class="mt-3 text-lg font-semibold text-indigo-600">
+        Price: $ {{ product.price | number }}
+        <span class="text-sm line-through text-gray-500">
+          $
+          {{
+            product.price + product.price * (product.discountPercentage / 100)
+              | number
+          }}
+        </span>
+      </p>
+
+      <div class="mt-2 flex items-center">
+        <span class="text-yellow-400 text-sm font-medium"
+          >Rating : {{ product.rating }} ★</span
+        >
+      </div>
     </div>
-    <div class="product-info">
-      <h2>{{ product.title }}</h2>
-      <p>{{ product.description }}</p>
-      <p><strong>Price:</strong> ${{ product.price }}</p>
-      <p><strong>Category:</strong> {{ product.category }}</p>
-      <p><strong>Brand:</strong> {{ product.brand }}</p>
-      <p><strong>Rating:</strong> {{ product.rating }} / 5</p>
-    </div>
-  </li>
-</ul>
+  </div>
+
+  <div
+    *ngIf="!loading && products.length === 0 && searchQuery"
+    class="text-center text-gray-500 mt-6"
+  >
+    Tidak ada produk yang ditemukan.
+  </div>
+</div>

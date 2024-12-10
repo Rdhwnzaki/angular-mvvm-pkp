@@ -1,22 +1,68 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Import CommonModule
-import { ProductService } from '../services/product.service'; // Import your service
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ProductService } from '../services/product.service';
+import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-product',
-  standalone: true, // Mark as a standalone component
-  imports: [CommonModule], // Import CommonModule to use ngFor
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css'],
 })
 export class ProductComponent implements OnInit {
-  products: any[] = []; // Initialize products as an empty array
+  products: any[] = [];
+  searchQuery: string = '';
+  loading: boolean = false;
+  errorMessage: string = '';
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService, private router: Router) {}
 
-  ngOnInit() {
-    this.productService.getAllProducts().subscribe((response: any) => {
-      this.products = response.products; // Assign the array from the response
+  ngOnInit(): void {
+    this.getProducts();
+  }
+
+  getProducts(): void {
+    this.loading = true;
+    this.errorMessage = '';
+    this.productService.getAllProducts().subscribe({
+      next: (response: any) => {
+        this.products = response.products;
+        this.loading = false;
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.errorMessage = 'Gagal memuat produk awal. Silakan coba lagi.';
+        this.loading = false;
+      },
     });
+  }
+
+  searchProducts(): void {
+    if (!this.searchQuery) {
+      this.getProducts();
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+    this.productService.searchProducts(this.searchQuery).subscribe({
+      next: (response: any) => {
+        this.products = response.products;
+        this.loading = false;
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.errorMessage = 'Pencarian gagal. Silakan coba lagi.';
+        this.loading = false;
+      },
+    });
+  }
+
+  goToProductDetail(productId: string): void {
+    console.log('Navigating to product-detail with ID:', productId);
+    this.router.navigate(['/product-detail', productId]);
   }
 }
