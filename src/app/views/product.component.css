@@ -1,0 +1,83 @@
+/* General styling for the product list */
+.product-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  background-color: #eaf7ea; /* Light green background */
+  padding: 20px;
+}
+
+/* Styling for individual product items */
+.product-item {
+  background-color: #ffffff; /* White background for items */
+  border: 2px solid #4caf50; /* Green border */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+/* Hover effect for the product item */
+.product-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for product image */
+.product-thumbnail img {
+  width: 100%;
+  height: auto;
+  border-bottom: 2px solid #4caf50; /* Green border under image */
+  border-radius: 8px 8px 0 0;
+}
+
+/* Styling for product info section */
+.product-info {
+  padding: 16px;
+}
+
+/* Product title styling */
+.product-info h2 {
+  color: #388e3c; /* Dark green title */
+  font-size: 1.6em;
+  margin-bottom: 10px;
+}
+
+/* Description text styling */
+.product-info p {
+  color: #333333;
+  font-size: 1em;
+  margin: 6px 0;
+}
+
+/* Price and category styling */
+.product-info p strong {
+  color: #388e3c; /* Dark green for price and category labels */
+}
+
+/* Brand and rating styling */
+.product-info p:last-child {
+  font-weight: bold;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 1024px) {
+  .product-list {
+    grid-template-columns: repeat(3, 1fr); /* 3 columns on medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .product-list {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .product-list {
+    grid-template-columns: 1fr; /* 1 column on very small screens */
+  }
+}

@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ProductComponent } from './views/product.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  standalone: true, // Mark as standalone
+  imports: [ProductComponent], // Import the ProductComponent
+  template: '<app-product></app-product>',
+  styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
-  title = 'angular-mvvm-pkp';
-}
+export class AppComponent {}
