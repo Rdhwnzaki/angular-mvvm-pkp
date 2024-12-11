@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-detail',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css'],
-  imports: [CommonModule, FormsModule, RouterModule],
 })
 export class ProductDetailComponent implements OnInit {
-  product: any = null;
-  loading: boolean = true;
+  product: any = {};
+  loading: boolean = false;
   errorMessage: string = '';
 
   constructor(
@@ -21,28 +21,46 @@ export class ProductDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('ProductDetailComponent initialized');
-    const productId = this.route.snapshot.paramMap.get('id');
-    console.log('Product ID:', productId);
-
+    const productId = this.route.snapshot.params['id'];
     if (productId) {
       this.getProductDetail(productId);
     }
   }
 
   getProductDetail(id: string): void {
-    console.log('Fetching product details for ID:', id);
+    this.loading = true;
     this.productService.getProductById(id).subscribe({
       next: (response: any) => {
-        console.log('Product details received:', response);
         this.product = response;
         this.loading = false;
       },
       error: (err: any) => {
-        console.error(err);
-        this.errorMessage = 'Gagal memuat detail produk. Silakan coba lagi.';
+        console.error('Error fetching product details:', err);
+        this.errorMessage = 'Gagal memuat detail produk.';
         this.loading = false;
       },
     });
+  }
+
+  currentIndex = 0;
+
+  get transformValue() {
+    return `-${this.currentIndex * 100}%`;
+  }
+
+  nextImage() {
+    if (this.currentIndex < this.product.images.length - 1) {
+      this.currentIndex++;
+    } else {
+      this.currentIndex = 0;
+    }
+  }
+
+  previousImage() {
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+    } else {
+      this.currentIndex = this.product.images.length - 1;
+    }
   }
 }

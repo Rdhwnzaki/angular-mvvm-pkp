@@ -62,7 +62,13 @@ export class ProductComponent implements OnInit {
   }
 
   goToProductDetail(productId: string): void {
-    console.log('Navigating to product-detail with ID:', productId);
-    this.router.navigate(['/product-detail', productId]);
+    this.router
+      .navigate(['/product', productId])
+      .then(() => {
+        console.log('Navigation successful');
+      })
+      .catch((err) => {
+        console.error('Navigation error:', err);
+      });
   }
 }
